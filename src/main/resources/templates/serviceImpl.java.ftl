@@ -6,7 +6,7 @@ import org.luoke.springboot.template.springboottemplateweb.common.exception.Busi
 import org.luoke.springboot.template.springboottemplateweb.common.response.ResponseExceptionEnum;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import ${package.Entity}.${entity};
 import ${package.Parent}.dto.${entity}CreateDTO;
@@ -89,9 +89,11 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
     @Override
     public IPage<${entity}ListVO> listByPage(${entity}FilterDTO ${entityName}FilterDTOPage) {
         final Page<${entity}> page = Page.of(${entityName}FilterDTOPage.getCurrent(), ${entityName}FilterDTOPage.getSize());
-        final LambdaQueryChainWrapper<${entity}> wrapper = lambdaQuery()
-            .eq(StringUtils.isNotBlank(${entityName}FilterDTOPage.getTitle()), ${entity}::getTitle, ${entityName}FilterDTOPage.getTitle())
-            .eq(StringUtils.isNotBlank(${entityName}FilterDTOPage.getUrl()), ${entity}::getUrl, ${entityName}FilterDTOPage.getUrl());
+        final LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<${entity}>()
+    <#list table.fields as field>
+            .eq(StringUtils.isNotBlank(${entityName}FilterDTOPage.get${field.capitalName}()), ${entity}::get${field.capitalName}, ${entityName}FilterDTOPage.get${field.capitalName}())
+    </#list>
+            ;
         return getBaseMapper().selectPage(page, wrapper).convert(${entity}ListVO::convertFor);
     }
 }

@@ -73,7 +73,7 @@ public class ${entity}CreateDTO {
 
     public static class ${entity}CreateDTOConverter extends Converter<${entity}CreateDTO, ${entity}> {
         @Override
-        protected ${entity} doForward(${entity}CreateDTO favoriteCreateDTO) {
+        protected ${entity} doForward(${entity}CreateDTO ${entityCapitalName}CreateDTO) {
         <#if entityLombokModel>
             return ${entity}.builder()
             <#list table.fields as field>
@@ -100,7 +100,7 @@ public class ${entity}CreateDTO {
         }
 
         @Override
-        protected ${entity}CreateDTO doBackward(${entity} favorite) {
+        protected ${entity}CreateDTO doBackward(${entity} ${entityCapitalName}) {
             throw new UnsupportedOperationException();
         }
     }

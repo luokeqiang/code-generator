@@ -72,7 +72,7 @@ public class ${entity}FilterDTO extends PageDTO {
 
     public static class ${entity}FilterDTOConverter extends Converter<${entity}FilterDTO, ${entity}> {
         @Override
-        protected ${entity} doForward(${entity}FilterDTO favoriteFilterDTO) {
+        protected ${entity} doForward(${entity}FilterDTO ${entityCapitalName}FilterDTO) {
         <#if entityLombokModel>
             return ${entity}.builder()
             <#list table.fields as field>
@@ -99,7 +99,7 @@ public class ${entity}FilterDTO extends PageDTO {
         }
 
         @Override
-        protected ${entity}FilterDTO doBackward(${entity} favorite) {
+        protected ${entity}FilterDTO doBackward(${entity} ${entityCapitalName}) {
             throw new UnsupportedOperationException();
         }
     }

@@ -9,6 +9,10 @@ import com.baomidou.mybatisplus.generator.config.po.LikeTable;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
 import com.baomidou.mybatisplus.generator.fill.Property;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.luoke.codegenerator.core.config.CodeGeneratorConfig;
+import com.luoke.codegenerator.core.config.DataBaseConfig;
 import com.luoke.codegenerator.core.entity.BaseEntity;
 import org.springframework.core.io.ClassPathResource;
 
@@ -31,6 +35,9 @@ public class CodeGenerator {
 
     private static final Properties DB_PROPERTIES = new Properties();
     private static final Properties CONFIG_PROPERTIES = new Properties();
+
+    private static CodeGeneratorConfig codeGeneratorConfig;
+    private static DataBaseConfig dataBaseConfig;
 
     static {
         final String[] pathSplits = Optional.ofNullable(CodeGenerator.class.getClassLoader().getResource(""))
@@ -55,21 +62,25 @@ public class CodeGenerator {
         try {
             DB_PROPERTIES.load(new ClassPathResource("generator/db.properties").getInputStream());
             CONFIG_PROPERTIES.load(new ClassPathResource("generator/config.properties").getInputStream());
+            final ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            codeGeneratorConfig = objectMapper.convertValue(CONFIG_PROPERTIES, CodeGeneratorConfig.class);
+            dataBaseConfig = objectMapper.convertValue(DB_PROPERTIES, DataBaseConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private static void doCodeGenerate() {
-        FastAutoGenerator.create(getDbConfig("url"), getDbConfig("username"), getDbConfig("password"))
-                .globalConfig(builder -> {
-                    builder.author(getInConfig("author")) // 设置作者
-                            .outputDir(SOURCE_DIR); // 指定输出目录
-                })
+        FastAutoGenerator.create(dataBaseConfig.getUrl(), dataBaseConfig.getUsername(), dataBaseConfig.getPassword())
+                .globalConfig(builder -> builder
+                        .author(codeGeneratorConfig.getAuthor()) // 设置作者
+                        .outputDir(SOURCE_DIR) // 指定输出目录
+                )
                 .packageConfig(builder -> {
-                    final String moduleName = getInConfig("moduleName");
+                    final String moduleName = codeGeneratorConfig.getModule();
                     final String mapperPath = RESOURCES_DIR + "/mapper/"+moduleName;
-                    builder.parent(getInConfig("basePackage")) // 设置父包名
+                    builder.parent(codeGeneratorConfig.getBasePackage()) // 设置父包名
                             .moduleName(moduleName) // 设置父包模块名
                             .pathInfo(Collections.singletonMap(OutputFile.xml, mapperPath)); // 设置mapperXml生成路径
                 })
