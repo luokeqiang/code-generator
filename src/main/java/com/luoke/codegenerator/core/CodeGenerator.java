@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.ConstVal;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.builder.CustomFile;
-import com.baomidou.mybatisplus.generator.config.po.LikeTable;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.fill.Column;
 import com.baomidou.mybatisplus.generator.fill.Property;
@@ -25,8 +24,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
- * @author luoke
- * @date 2023-02-25 18:07
+ * @author luoke 2023-02-25 18:07
  */
 public class CodeGenerator {
     public static final String MODULE_DIR;
