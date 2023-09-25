@@ -38,7 +38,7 @@ import lombok.experimental.Accessors;
 <#if swagger>
     @ApiModel(value = "${entity}对象", description = "${table.comment!}")
 </#if>
-public class ${entity}FilterDTO extends PageDTO {
+public class ${entity}FilterDTO extends PageDTO<${entity}> {
 <#assign entityCapitalName="${entity?substring(0,1)?lower_case}${entity?substring(1)}"/>
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
@@ -53,8 +53,8 @@ public class ${entity}FilterDTO extends PageDTO {
             @ApiModelProperty("${field.comment}")
         <#else>
     /**
-    * ${field.comment}
-    */
+     * ${field.comment}
+     */
         </#if>
     </#if>
     private ${field.propertyType} ${field.propertyName};
@@ -62,10 +62,10 @@ public class ${entity}FilterDTO extends PageDTO {
 <#------------  END 字段循环遍历  ---------->
 
     /**
-    * 转换为 {@link ${entity}} 对象
-    *
-    * @return {@link ${entity}}
-    */
+     * 转换为 {@link ${entity}} 对象
+     *
+     * @return {@link ${entity}}
+     */
     public ${entity} convertTo${entity}() {
         return new ${entity}FilterDTOConverter().doForward(this);
     }
@@ -81,9 +81,9 @@ public class ${entity}FilterDTO extends PageDTO {
                 <#else>
                     <#assign getprefix="get"/>
                 </#if>
-                .${field.propertyName}(${entity?substring(0,1)?lower_case}${entity?substring(1)}FilterDTO.${getprefix}${field.capitalName}())
+                    .${field.propertyName}(${entity?substring(0,1)?lower_case}${entity?substring(1)}FilterDTO.${getprefix}${field.capitalName}())
             </#list>
-            .build();
+                    .build();
         <#else>
             ${entity} ${entityCapitalName} = new ${entity}();
             <#list table.fields as field>

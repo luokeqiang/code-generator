@@ -3,6 +3,8 @@ package ${package.Parent}.dto;
 import com.google.common.base.Converter;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import ${package.Entity}.${entity};
 <#list table.importPackages as pkg>
     import ${pkg};
@@ -54,19 +56,24 @@ public class ${entity}CreateDTO {
             @ApiModelProperty("${field.comment}")
         <#else>
     /**
-    * ${field.comment}
-    */
+     * ${field.comment}
+     */
         </#if>
+    </#if>
+    <#if field.propertyType=='String'>
+    @NotBlank(message = "${field.comment}不能为空")
+    <#else>
+    @NotNull(message = "${field.comment}不能为空")
     </#if>
     private ${field.propertyType} ${field.propertyName};
 </#list>
 <#------------  END 字段循环遍历  ---------->
 
     /**
-    * 转换为 {@link ${entity}} 对象
-    *
-    * @return {@link ${entity}}
-    */
+     * 转换为 {@link ${entity}} 对象
+     *
+     * @return {@link ${entity}}
+     */
     public ${entity} convertTo${entity}() {
         return new ${entity}CreateDTOConverter().doForward(this);
     }
@@ -82,9 +89,9 @@ public class ${entity}CreateDTO {
                 <#else>
                     <#assign getprefix="get"/>
                 </#if>
-                .${field.propertyName}(${entityCapitalName}CreateDTO.${getprefix}${field.capitalName}())
+                    .${field.propertyName}(${entityCapitalName}CreateDTO.${getprefix}${field.capitalName}())
             </#list>
-            .build();
+                    .build();
         <#else>
             ${entity} ${entityCapitalName} = new ${entity}();
             <#list table.fields as field>

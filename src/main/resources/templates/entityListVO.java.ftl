@@ -43,6 +43,10 @@ import lombok.experimental.Accessors;
 </#if>
 public class ${entity}ListVO {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
+    /**
+     * 主键ID
+     */
+    private String id;
 <#list table.fields as field>
     <#if field.keyFlag>
         <#assign keyPropertyName="${field.propertyName}"/>
@@ -53,8 +57,8 @@ public class ${entity}ListVO {
             @ApiModelProperty("${field.comment}")
         <#else>
     /**
-    * ${field.comment}
-    */
+     * ${field.comment}
+     */
         </#if>
     </#if>
 <#-- 普通字段 -->
@@ -77,15 +81,16 @@ public class ${entity}ListVO {
         protected ${entity}ListVO doForward(${entity} ${entityCapitalName}) {
         <#if entityLombokModel>
             return ${entity}ListVO.builder()
+                    .id(${entityCapitalName}.getId())
             <#list table.fields as field>
                 <#if field.propertyType == "boolean">
                     <#assign getprefix="is"/>
                 <#else>
                     <#assign getprefix="get"/>
                 </#if>
-                .${field.propertyName}(${entityCapitalName}.${getprefix}${field.capitalName}())
+                    .${field.propertyName}(${entityCapitalName}.${getprefix}${field.capitalName}())
             </#list>
-            .build();
+                    .build();
         <#else>
             ${entity}ListVO ${entityCapitalName}ListVO = new ${entity}ListVO();
             <#list table.fields as field>

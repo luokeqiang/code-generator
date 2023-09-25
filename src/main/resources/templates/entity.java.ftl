@@ -10,9 +10,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 <#if entityLombokModel>
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Builder;
+import java.io.Serial;
+import lombok.*;
     <#if chainModel>
 import lombok.experimental.Accessors;
     </#if>
@@ -27,9 +26,11 @@ import lombok.experimental.Accessors;
  * @since ${date}
  */
 <#if entityLombokModel>
+@EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
     <#if chainModel>
 @Accessors(chain = true)
     </#if>
@@ -53,6 +54,7 @@ public class ${entity} {
 </#if>
 <#if entitySerialVersionUID>
 
+    @Serial
     private static final long serialVersionUID = 1L;
 </#if>
 <#-- ----------  BEGIN 字段循环遍历  ---------->

@@ -21,6 +21,10 @@ import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
 * <p>
 * ${table.comment!} 服务实现类
@@ -51,12 +55,15 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public boolean create(List<${entity}CreateDTO> ${entityName}CreateDTOs) {
+        return saveBatch(${entityName}CreateDTOs.stream().map(${entity}CreateDTO::convertTo${entity}).collect(Collectors.toList()));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public int update(${entity}UpdateDTO ${entityName}UpdateDTO) {
         log.info("修改${table.comment!}，id = {}", ${entityName}UpdateDTO.getId());
-        final ${entity} ${entityName} = find(${entityName}UpdateDTO.getId());
-        ${entityName}.setTitle(${entityName}UpdateDTO.getTitle());
-        ${entityName}.setUrl(${entityName}UpdateDTO.getUrl());
-        return getBaseMapper().updateById(${entityName});
+        return getBaseMapper().updateById(${entityName}UpdateDTO.convertTo${entity}());
     }
 
     @Override
@@ -88,13 +95,17 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 
     @Override
     public IPage<${entity}ListVO> listByPage(${entity}FilterDTO ${entityName}FilterDTOPage) {
-        final Page<${entity}> page = Page.of(${entityName}FilterDTOPage.getCurrent(), ${entityName}FilterDTOPage.getSize());
         final LambdaQueryWrapper<${entity}> wrapper = new LambdaQueryWrapper<${entity}>()
     <#list table.fields as field>
-            .eq(StringUtils.isNotBlank(${entityName}FilterDTOPage.get${field.capitalName}()), ${entity}::get${field.capitalName}, ${entityName}FilterDTOPage.get${field.capitalName}())
+                <#if field.propertyType=='String'>
+                    .eq(StringUtils.isNotBlank(${entityName}FilterDTOPage.get${field.capitalName}()), ${entity}::get${field.capitalName}, ${entityName}FilterDTOPage.get${field.capitalName}())
+                <#else>
+                    .eq(Objects.nonNull(${entityName}FilterDTOPage.get${field.capitalName}()), ${entity}::get${field.capitalName}, ${entityName}FilterDTOPage.get${field.capitalName}())
+                </#if>
     </#list>
+                .orderByDesc(${entity}::getCreateTime);
             ;
-        return getBaseMapper().selectPage(page, wrapper).convert(${entity}ListVO::convertFor);
+        return getBaseMapper().selectPage(${entityName}FilterDTOPage.getPage(), wrapper).convert(${entity}ListVO::convertFor);
     }
 }
     </#if>

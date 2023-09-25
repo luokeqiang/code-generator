@@ -3,6 +3,7 @@ package com.luoke.codegenerator.core.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
  * @date 2023-02-25 18:57
  */
 @Data
-public class BaseEntity {
+public class BaseEntity implements Serializable {
     /**
      * 主键 id
      */
@@ -21,23 +22,23 @@ public class BaseEntity {
      * 创建人
      */
     @TableField(fill = FieldFill.INSERT)
-    private String createdBy;
+    private String createBy;
     /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新人
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private String updatedBy;
+    private String updateBy;
     /**
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedTime;
+    private LocalDateTime updateTime;
 
     @TableLogic(delval = "now()", value = "null")
     private LocalDateTime deleted;

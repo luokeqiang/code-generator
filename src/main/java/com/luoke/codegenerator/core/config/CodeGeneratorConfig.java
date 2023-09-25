@@ -25,4 +25,9 @@ public class CodeGeneratorConfig {
      * 继承实体全类名
      */
     private String superClass;
+
+    /**
+     * 要生成的表名
+     */
+    private String table;
 }

@@ -83,14 +83,14 @@ public class CodeGenerator {
                             .pathInfo(Collections.singletonMap(OutputFile.xml, mapperPath)); // 设置mapperXml生成路径
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("favorite") // 设置需要生成的表名
+                    builder.addInclude(codeGeneratorConfig.getTable().split(",")) // 设置需要生成的表名
 //                    builder // 设置需要生成的表名
 //                            .likeTable(new LikeTable("GAEA"))
                             .entityBuilder()
                             .enableLombok()
                             .enableFileOverride()
                             .superClass(BaseEntity.class)
-                            .addSuperEntityColumns("id", "created_by", "created_time", "updated_by", "updated_time", "deleted")
+                            .addSuperEntityColumns("id", "create_by", "create_time", "update_by", "update_time", "deleted")
                             .addTableFills(new Column("create_time", FieldFill.INSERT))
                             .addTableFills(new Property("updateTime", FieldFill.INSERT_UPDATE))
                             .controllerBuilder()

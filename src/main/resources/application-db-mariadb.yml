@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/demo
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: luoke
+    password: lkq413554
+logging:
+  level:
+    org:
+      luoke:
+        mapper: debug
+server:
+  port: 8989
