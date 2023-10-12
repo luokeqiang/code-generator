@@ -133,7 +133,19 @@ public class CodeGenerator {
                             .fileName("ListVO.java")
                             .templatePath("/templates/entityListVO.java.ftl")
                             .build();
-                    builder.customFile(Arrays.asList(createDto, updateDto, detailVO, listVO, filterDTO));
+                    final CustomFile types = new CustomFile.Builder()
+                            .enableFileOverride()
+                            .packageName("types")
+                            .fileName(".ts")
+                            .templatePath("/templates/types/types.ts.ftl")
+                            .build();
+                    final CustomFile api = new CustomFile.Builder()
+                            .enableFileOverride()
+                            .packageName("api")
+                            .fileName(".ts")
+                            .templatePath("/templates/types/api.ts.ftl")
+                            .build();
+                    builder.customFile(Arrays.asList(createDto, updateDto, detailVO, listVO, filterDTO,types,api));
                 })
                 .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                 .execute();
